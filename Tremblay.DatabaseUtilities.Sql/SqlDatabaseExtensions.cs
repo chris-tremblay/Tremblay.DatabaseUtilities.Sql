@@ -195,6 +195,18 @@ namespace Tremblay.DatabaseUtilities.Sql
             return (int)db.ExecuteScalar(trans.Connection, trans, $"{obj.GenerateInsertStatement(parameters)};SELECT SCOPE_IDENTITY();", parameters.ToArray());
         }
 
+        public static bool Update(this ISqlDatabase db, SqlConnection cnn, object obj)
+        {
+            var parameters = new List<object>();
+            return db.ExecuteNonQuery(cnn, obj.GenerateUpdateStatement(parameters), parameters.ToArray()) > 0;
+        }
+
+        public static bool Update(this ISqlDatabase db, SqlTransaction trans, object obj)
+        {
+            var parameters = new List<object>();
+            return db.ExecuteNonQuery(trans.Connection, trans, obj.GenerateUpdateStatement(parameters), parameters.ToArray()) > 0;
+        }
+
         private static bool IsNumber(this object obj)
             => obj is sbyte
                 || obj is byte
