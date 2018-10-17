@@ -6,9 +6,9 @@ namespace Tremblay.DatabaseUtilities.Sql
     {
 
         #region Properties
-
+    
         string ConnectionString { get; set; }
-
+        
         #endregion 
 
         #region Methods
