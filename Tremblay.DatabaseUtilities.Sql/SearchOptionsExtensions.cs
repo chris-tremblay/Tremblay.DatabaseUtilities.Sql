@@ -37,9 +37,9 @@ namespace Tremblay.DatabaseUtilities.Sql
                     continue;
 
                 //Ignore the current property if necessary.
-                var ignoreAttribute = property.GetCustomAttribute(typeof(IgnoreAttribute));
+                var ignoreAttribute = (IgnoreAttribute)property.GetCustomAttribute(typeof(IgnoreAttribute));
 
-                if (ignoreAttribute != null)
+                if (ignoreAttribute?.IsIgnored(SqlAction.Select) == true)
                     continue;
 
                 //Determine the column name.

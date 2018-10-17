@@ -171,6 +171,30 @@ namespace Tremblay.DatabaseUtilities.Sql
             return value.ToString();
         }
 
+        public static void Insert(this ISqlDatabase db, SqlConnection cnn, object obj)
+        {
+            var parameters = new List<object>();
+            db.ExecuteNonQuery(cnn, obj.GenerateInsertStatement(parameters), parameters);
+        }
+
+        public static void Insert(this ISqlDatabase db, SqlTransaction trans, object obj)
+        {
+            var parameters = new List<object>();
+            db.ExecuteNonQuery(trans, obj.GenerateInsertStatement(parameters), parameters);
+        }
+
+        public static int InsertIdentity(this ISqlDatabase db, SqlConnection cnn, object obj)
+        {
+            var parameters = new List<object>();
+            return (int)db.ExecuteScalar(cnn, $"{obj.GenerateInsertStatement(parameters)};SELECT SCOPE_IDENTITY();", parameters.ToArray());
+        }
+
+        public static int InsertIdentity(this ISqlDatabase db, SqlTransaction trans, object obj)
+        {
+            var parameters = new List<object>();
+            return (int)db.ExecuteScalar(trans.Connection, trans, $"{obj.GenerateInsertStatement(parameters)};SELECT SCOPE_IDENTITY();", parameters.ToArray());
+        }
+
         private static bool IsNumber(this object obj)
             => obj is sbyte
                 || obj is byte
@@ -378,15 +402,15 @@ namespace Tremblay.DatabaseUtilities.Sql
         public static List<TValueType> GetObjectList<TValueType>(this ISqlDatabase db, string commandText, params object[] parameters) where TValueType : class, new()
         {
             using (var command = db.CreateSqlCommand(commandText, parameters))
-            using (command.Connection)
-                return db.GetObjectList<List<TValueType>, TValueType>(command);
+                using (command.Connection)
+                    return db.GetObjectList<List<TValueType>, TValueType>(command);
         }
 
         public static async Task<List<TValueType>> GetObjectListAsync<TValueType>(this ISqlDatabase db, string commandText, params object[] parameters) where TValueType : class, new()
         {
             using (var command = db.CreateSqlCommand(commandText, parameters))
-            using (command.Connection)
-                return await db.GetObjectListAsync<List<TValueType>, TValueType>(command);
+                using (command.Connection)
+                    return await db.GetObjectListAsync<List<TValueType>, TValueType>(command);
         }
 
         public static List<TValueType> GetObjectList<TValueType>(this ISqlDatabase db, SqlCommand command) where TValueType : class, new()

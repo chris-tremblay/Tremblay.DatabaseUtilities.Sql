@@ -1,14 +1,35 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Tremblay.DatabaseUtilities.Sql.Attributes
 {
-    /// <summary>
-    /// Instructs the SearchOptions extensions to ignore the specified property while generating a sql statement.
-    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class IgnoreAttribute : Attribute
     {
-            
+    
+        #region Constructors
+
+        public IgnoreAttribute(params SqlAction[] actions)
+        {
+            IgnoredActions = actions;
+        }
+
+        #endregion
+
+        #region Properties
+
+        public SqlAction[] IgnoredActions { get; }
+
+        #endregion 
+
+        #region Public Methods
+
+        public bool IsIgnored(SqlAction action)
+            => IgnoredActions?.Contains(action) == true;
+
+        #endregion
+
     }
 }
