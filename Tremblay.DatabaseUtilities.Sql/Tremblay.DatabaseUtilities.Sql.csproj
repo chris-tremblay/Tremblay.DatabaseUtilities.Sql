@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Chris Tremblay</Authors>
+    <Company></Company>
+    <Product>Tremblay.DatabaseUtilities.Sql</Product>
+    <PackageId>Tremblay.DatabaseUtilities.Sql</PackageId>
+  </PropertyGroup>
+ 
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
+  </ItemGroup>
+
+</Project>
